@@ -1,4 +1,6 @@
+﻿using Microsoft.VisualBasic;
 using System;
+using System.Data;
 using System.Drawing;
 using System.Reflection.Metadata;
 using System.Windows.Forms;
@@ -15,18 +17,20 @@ namespace NaidisForm
         RadioButton r1, r2;
         CheckBox c1, c2;
         PictureBox pb;
+        ListBox lb;
         bool isBtnVisible = false;
         bool isLblVisible = false;
         bool isBoxVisible = false;
         bool isRBtnVisible = false;
         bool isChkVisible = false;
         bool isPicVisible = false;
+        bool isLBVisible = false;
 
 
         public TreeForm()
         {
             this.Height = 600;
-            this.Width = 800;
+            this.Width = 1200;
             this.Text = "Vorm põhielementidega";
             this.tree = new TreeView();
             tree.Dock = DockStyle.Left;
@@ -102,8 +106,26 @@ namespace NaidisForm
             pb.SizeMode = PictureBoxSizeMode.Zoom;
             pb.BorderStyle= BorderStyle.Fixed3D;
 
+            treeNode.Nodes.Add(new TreeNode("ListBox"));
+            lb = new ListBox();
+            lb.Items.Add("roheline");
+            lb.Items.Add("sinine");
+            lb.Items.Add("hall");
+            lb.Items.Add("kollane");
+            lb.Location= new Point(tree.Width, pb.Location.Y +pb.Height);
 
 
+            treeNode.Nodes.Add(new TreeNode("DataGridView"));
+            DataSet ds = new DataSet("XML fail. Menüü");
+            ds.ReadXml(@"..\..\..\food_menu.xml");
+            DataGridView dataGrid = new DataGridView();
+            dataGrid.Location= new Point(tree.Width+pb.Width, pb.Location.Y);
+            dataGrid.Height = 175;
+            dataGrid.Width = 780;
+            dataGrid.DataSource= ds;
+            dataGrid.AutoGenerateColumns = true;
+            dataGrid.DataMember= "Food";
+            dataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
 
 
             tree.Nodes.Add(treeNode);
@@ -116,6 +138,8 @@ namespace NaidisForm
             this.Controls.Add(c1);
             this.Controls.Add(c2);
             this.Controls.Add(pb);
+            this.Controls.Add(lb);
+            this.Controls.Add(dataGrid);
             lbl.Visible = false;
             btn.Visible = false;
             txt_box.Visible = false;
@@ -124,7 +148,7 @@ namespace NaidisForm
             c1.Visible = false;
             c2.Visible = false;
             pb.Visible = false;
-
+            lb.Visible = false;
         }
 
         private void Txt_box_KeyDown(object? sender, KeyEventArgs e)
@@ -141,6 +165,23 @@ namespace NaidisForm
                 {
                     lbl.Text = "Correct password!";
                 }
+                else if (inputText == "exit")
+                {
+                    Close();
+                }
+                else if (inputText == "tekst")
+                {
+                    string tekst = Interaction.InputBox("Sisesta pealkiri", "Pealkiri muutmine", "Uus pealkiri");
+
+                    if (tekst == "")
+                    {
+                        this.Close();
+                    }
+                    else
+                    {
+                        lbl.Text = tekst;
+                    }
+                }
                 if (inputText.StartsWith("fg ") && inputText.Length > 3)
                 {
                     string colorInput = inputText.Substring(3);
@@ -155,7 +196,7 @@ namespace NaidisForm
                        
                     }
                 }
-                if (inputText.StartsWith("bg ") && inputText.Length > 3)
+                else if (inputText.StartsWith("bg ") && inputText.Length > 3)
                 {
                     string colorInput = inputText.Substring(3);
 
@@ -169,6 +210,46 @@ namespace NaidisForm
 
                     }
                 }
+                else if (inputText.StartsWith("cr ") && inputText.Length > 3)
+                {
+                    string LBInput = inputText.Substring(3);
+
+                    if (!lb.Items.Contains(LBInput))
+                    {
+                        try
+                        {
+                            lb.Items.Add(LBInput);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Этот элемент уже существует в ListBox'e.");
+                    }
+                }
+                else if (inputText.StartsWith("dl ") && inputText.Length > 3)
+                {
+                    string LBInput = inputText.Substring(3);
+
+                    if (lb.Items.Contains(LBInput))
+                    {
+                        try
+                        {
+                            lb.Items.Remove(LBInput);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Этот элемент уже удален в ListBox'e.");
+                    }
+                }
                 else
                 {
                     lbl.Text = inputText;
@@ -178,6 +259,7 @@ namespace NaidisForm
                 txt_box.Clear();
             }
         }
+
 
         private void CheckBoxes_Changed(object? sender, EventArgs e)
         {
@@ -232,6 +314,8 @@ namespace NaidisForm
             }
         }
 
+
+
         private void Tree_AfterSelect(object? sender, TreeViewEventArgs e)
         {
             if (e.Node.Text == "Nupp-Button")
@@ -271,6 +355,12 @@ namespace NaidisForm
                 tree.SelectedNode = null;
                 isPicVisible = !isPicVisible;
                 pb.Visible = isPicVisible;
+            }
+            else if (e.Node.Text == "ListBox")
+            {
+                tree.SelectedNode = null;
+                isLBVisible = !isLBVisible;
+                lb.Visible = isLBVisible;
             }
         }
 
