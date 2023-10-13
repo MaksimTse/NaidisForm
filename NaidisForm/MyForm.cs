@@ -1,41 +1,85 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.Security.Cryptography.X509Certificates;
 
 namespace NaidisForm
 {
     public partial class MyForm : Form
     {
-        Button btn;
-        public MyForm()
+        class Triangle
         {
-            this.Height = 200;
-            this.Width = 200;
-            btn = new Button();
-            btn.Height = 40;
-            btn.Width = 100;
-            btn.Text = "Valjuta mind!";
-            btn.Location = new Point(10, 20);
-
-            this.Controls.Add(btn);
-        }
-        public MyForm(int x, int y, string nimetus)
-        {
-            this.Height = x;
-            this.Width = y;
-            this.Text = nimetus;
-            btn = new Button();
-            btn.Height = 40;
-            btn.Width = 100;
-            btn.Text = "Click";
-            btn.Location = new Point(10, 20);
-
-            this.Controls.Add(btn);
-            btn.Click += Btn_Click;
-        }
-
-        private void Btn_Click(object? sender, EventArgs e)
-        {
-            MyForm form = new MyForm();
-            form.ShowDialog();
+            public double a;
+            public double b;
+            public double c;
+            public double height;
+            public Triangle(double A, double B, double C)
+            {
+                a = A;
+                b = B;
+                c = C;
+            }
+           
+            public string outputA()
+            {
+                return Convert.ToString(a);
+            }
+            public string outputB()
+            {
+                return Convert.ToString(b);
+            }
+            public string outputC()
+            {
+                return Convert.ToString(c);
+            }
+            public double Perimeter()
+            {
+                double p = 0;
+                p = a + b + c;
+                return p;
+            }
+            public double Surface()
+            {
+                double s = 0;
+                double p = 0;
+                p = (a + b + c) / 2;
+                s= Math.Sqrt((p * (p - a) + (p - b) + (p - c)));
+                return s;
+            }
+            public double CalculateHeight()
+            {
+                double s = Surface();
+                double height = 2 * s / a;
+                return height;
+            }
+            public double GetSetA
+            {
+                get
+                { return a; }
+                set
+                { a = value; }
+            }
+            public double GetSetB
+            {
+                get
+                { return b; }
+                set
+                { b = value; }
+            }
+            public double GetSetC
+            {
+                get
+                { return c; }
+                set
+                { c = value; }
+            }
+            public bool ExistTriangle
+            {
+                get
+                {
+                    if ((a + b < c) && (b + c < a) && (a + c < b))
+                    return true;
+                    else return false;
+                }
+            }
         }
     }
 }

@@ -18,6 +18,8 @@ namespace NaidisForm
         CheckBox c1, c2;
         PictureBox pb;
         ListBox lb;
+
+        private MyForm triangleForm;
         bool isBtnVisible = false;
         bool isLblVisible = false;
         bool isBoxVisible = false;
@@ -126,6 +128,10 @@ namespace NaidisForm
             dataGrid.AutoGenerateColumns = true;
             dataGrid.DataMember= "Food";
             dataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
+
+            treeNode.Nodes.Add(new TreeNode("Triangle"));
+            
 
 
             tree.Nodes.Add(treeNode);
@@ -361,6 +367,12 @@ namespace NaidisForm
                 tree.SelectedNode = null;
                 isLBVisible = !isLBVisible;
                 lb.Visible = isLBVisible;
+            }
+            else if (e.Node.Text == "Triangle")
+            {
+                tree.SelectedNode = null;
+                triangleForm = new MyForm();
+                triangleForm.Show();
             }
         }
 
