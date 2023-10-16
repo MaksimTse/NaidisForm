@@ -19,7 +19,7 @@ namespace NaidisForm
         PictureBox pb;
         ListBox lb;
 
-        private MyForm triangleForm;
+        private TriangleForm triangleForm;
         bool isBtnVisible = false;
         bool isLblVisible = false;
         bool isBoxVisible = false;
@@ -371,7 +371,7 @@ namespace NaidisForm
             else if (e.Node.Text == "Triangle")
             {
                 tree.SelectedNode = null;
-                triangleForm = new MyForm();
+                triangleForm = new TriangleForm();
                 triangleForm.Show();
             }
         }

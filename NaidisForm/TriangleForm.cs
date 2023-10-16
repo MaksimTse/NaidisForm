@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NaidisForm
 {
-    public partial class MyForm : Form
+    public partial class TriangleForm : Form
     {
         private TextBox txtPointA;
         private TextBox txtPointB;
@@ -13,7 +19,7 @@ namespace NaidisForm
         private Button btnClear;
         private ListBox lstTriangleInfo;
 
-        public MyForm()
+        public TriangleForm()
         {
             InitializeComponent();
             InitializeUI();
@@ -28,14 +34,17 @@ namespace NaidisForm
         private void InitializeUI()
         {
             txtPointA = new TextBox();
+            txtPointA.PlaceholderText = "Enter A side";
             txtPointA.Location = new Point(10, 10);
             txtPointA.Size = new Size(100, 20);
 
             txtPointB = new TextBox();
+            txtPointB.PlaceholderText = "Enter B side";
             txtPointB.Location = new Point(10, 40);
             txtPointB.Size = new Size(100, 20);
 
             txtPointC = new TextBox();
+            txtPointC.PlaceholderText = "Enter C side";
             txtPointC.Location = new Point(10, 70);
             txtPointC.Size = new Size(100, 20);
 
@@ -110,90 +119,6 @@ namespace NaidisForm
             else
             {
                 MessageBox.Show("Пожалуйста, введите корректные значения сторон треугольника.");
-            }
-        }
-        class Triangle
-        {
-
-            public double a;
-            public double b;
-            public double c;
-            public double height;
-            public double median;
-            public Triangle(double A, double B, double C)
-            {
-                a = A;
-                b = B;
-                c = C;
-            }
-
-            public string outputA()
-            {
-                return Convert.ToString(a);
-            }
-            public string outputB()
-            {
-                return Convert.ToString(b);
-            }
-            public string outputC()
-            {
-                return Convert.ToString(c);
-            }
-            public double Perimeter()
-            {
-                double p = 0;
-                p = a + b + c;
-                return p;
-            }
-            public double Surface()
-            {
-                double s = 0;
-                double p = 0;
-                p = (a + b + c) / 2;
-                s= Math.Sqrt((p * (p - a) + (p - b) + (p - c)));
-                return s;
-            }
-            public double Height()
-            {
-                double s = Surface();
-                double height = 2 * s / a;
-                return height;
-            }
-            public double Median()
-            {
-                median = 0.5 * a;
-                return median;
-            }
-
-            public double GetSetA
-            {
-                get
-                { return a; }
-                set
-                { a = value; }
-            }
-            public double GetSetB
-            {
-                get
-                { return b; }
-                set
-                { b = value; }
-            }
-            public double GetSetC
-            {
-                get
-                { return c; }
-                set
-                { c = value; }
-            }
-            public bool ExistTriangle
-            {
-                get
-                {
-                    if ((a + b < c) && (b + c < a) && (a + c < b))
-                    return false;
-                    else return true;
-                }
             }
         }
     }

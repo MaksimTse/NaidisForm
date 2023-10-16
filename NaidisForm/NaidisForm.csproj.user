@@ -7,6 +7,9 @@
     <Compile Update="TreeForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="TriangleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="TrianglePictureBoxControl.cs">
       <SubType>Component</SubType>
     </Compile>
