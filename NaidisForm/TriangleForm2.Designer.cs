@@ -1,6 +1,6 @@
 ﻿namespace NaidisForm
 {
-    partial class TriangleForm
+    partial class TriangleForm2
     {
         /// <summary>
         /// Required designer variable.
@@ -11,7 +11,6 @@
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         private System.ComponentModel.IContainer components = null;
-
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -37,5 +36,4 @@
 
         #endregion
     }
-
 }

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace NaidisForm
 {
-    public partial class TriangleForm : Form
+    public partial class TriangleForm2 : Form
     {
         private TextBox txtPointA;
         private TextBox txtPointB;
@@ -19,13 +19,13 @@ namespace NaidisForm
         private RadioButton radioSides;
         private RadioButton radioHeight;
         private Button btnDrawTriangle;
-        private Button btnShowForm;
         private Button btnClear;
         private ListBox lstTriangleInfo;
-        private TriangleForm2 triangleForm2;
+        private Button btnSaveToFile;
 
-        public TriangleForm()
+        private Bitmap triangleImage;
 
+        public TriangleForm2()
         {
             InitializeComponent();
             InitializeUI();
@@ -33,12 +33,40 @@ namespace NaidisForm
 
         private void btnClear_Click(object sender, EventArgs e)
         {
+            triangleImage = null;
             Invalidate();
             lstTriangleInfo.Items.Clear();
         }
 
+
+        private void btnSaveAsImage_Click(object sender, EventArgs e)
+        {
+            if (triangleImage != null)
+            {
+                using (SaveFileDialog dialog = new SaveFileDialog())
+                {
+                    dialog.Filter = "PNG Image|*.png";
+                    dialog.Title = "Save Triangle Image";
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        triangleImage.Save(dialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                        MessageBox.Show("lisatud.");
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("error.");
+            }
+        }
         private void InitializeUI()
         {
+
+            btnSaveToFile = new Button();
+            btnSaveToFile.Text = "Salvesta";
+            btnSaveToFile.Location = new Point(10, 220);
+            btnSaveToFile.Click += btnSaveToFile_Click;
+
             txtPointA = new TextBox();
             txtPointA.PlaceholderText = "Enter A side";
             txtPointA.Location = new Point(10, 10);
@@ -76,11 +104,6 @@ namespace NaidisForm
             btnDrawTriangle.Location = new Point(10, 190);
             btnDrawTriangle.Click += btnDrawTriangle_Click;
 
-            btnShowForm = new Button();
-            btnShowForm.Text = "Teine Vorm";
-            btnShowForm.Location = new Point(10, 220);
-            btnShowForm.Click += btnShowForm_Click;
-
             btnClear = new Button();
             btnClear.Text = "Clear";
             btnClear.Location = new Point(10, 250);
@@ -90,9 +113,8 @@ namespace NaidisForm
             lstTriangleInfo.Location = new Point(10, 280);
             lstTriangleInfo.Size = new Size(300, 100);
 
-
+            Controls.Add(btnSaveToFile);
             Controls.Add(lstTriangleInfo);
-            Controls.Add(btnShowForm);
             Controls.Add(btnClear);
             Controls.Add(txtPointA);
             Controls.Add(txtPointB);
@@ -102,14 +124,21 @@ namespace NaidisForm
             Controls.Add(radioHeight);
             Controls.Add(btnDrawTriangle);
         }
-
-        private void btnShowForm_Click(object sender, EventArgs e)
+        private void btnSaveToFile_Click(object sender, EventArgs e)
         {
-            triangleForm2 = new TriangleForm2();
-            triangleForm2.Show();
+            using (StreamWriter writer = new StreamWriter("triangle_data.txt", true))
+            {
+                writer.WriteLine("Kolmunrga küljed:");
+                writer.WriteLine($"Külg A: {txtPointA.Text}");
+                writer.WriteLine($"Külg B: {txtPointB.Text}");
+                writer.WriteLine($"Külg C: {txtPointC.Text}");
+                writer.WriteLine($"Kõrgus: {txtHeight.Text}");
+                writer.WriteLine("Kolmnurga tüüp: " + DetermineTriangleType(double.Parse(txtPointA.Text), double.Parse(txtPointB.Text), double.Parse(txtPointC.Text)));
+                writer.WriteLine();
+            }
 
+            MessageBox.Show("Kolmnurga andmed lisatud triangle_data.txt");
         }
-
         private void btnDrawTriangle_Click(object sender, EventArgs e)
         {
             double pointA, pointB, pointC, height;
@@ -135,12 +164,19 @@ namespace NaidisForm
                         double xC = centerX + pointC * Math.Cos(angleB);
                         double yC = centerY - pointC * Math.Sin(angleB);
 
-                        Graphics graphics = CreateGraphics();
-                        Pen pen = new Pen(Color.Black);
-                        graphics.DrawLine(pen, (float)xA, (float)yA, (float)xB, (float)yB);
-                        graphics.DrawLine(pen, (float)xB, (float)yB, (float)xC, (float)yC);
-                        graphics.DrawLine(pen, (float)xC, (float)yC, (float)xA, (float)yA);
+                        // Create a Graphics object for drawing on the form
+                        using (Graphics graphics = CreateGraphics())
+                        {
+                            // Create a Pen for drawing the triangle
+                            using (Pen pen = new Pen(Color.Black))
+                            {
+                                graphics.DrawLine(pen, (float)xA, (float)yA, (float)xB, (float)yB);
+                                graphics.DrawLine(pen, (float)xB, (float)yB, (float)xC, (float)yC);
+                                graphics.DrawLine(pen, (float)xC, (float)yC, (float)xA, (float)yA);
+                            }
+                        }
 
+                        // Create a new Triangle object
                         Triangle triangle = new Triangle(pointA, pointB, pointC);
 
                         lstTriangleInfo.Items.Add($"Külg A: {pointA}");
@@ -182,11 +218,15 @@ namespace NaidisForm
 
                     lstTriangleInfo.Items.Clear();
 
-                    Graphics graphics = CreateGraphics();
-                    Pen pen = new Pen(Color.Black);
-                    graphics.DrawLine(pen, (float)xA, (float)yA, (float)xB, (float)yB);
-                    graphics.DrawLine(pen, (float)xB, (float)yB, (float)xC, (float)yC);
-                    graphics.DrawLine(pen, (float)xC, (float)yC, (float)xA, (float)yA);
+                    using (Graphics graphics = CreateGraphics())
+                    {
+                        using (Pen pen = new Pen(Color.Black))
+                        {
+                            graphics.DrawLine(pen, (float)xA, (float)yA, (float)xB, (float)yB);
+                            graphics.DrawLine(pen, (float)xB, (float)yB, (float)xC, (float)yC);
+                            graphics.DrawLine(pen, (float)xC, (float)yC, (float)xA, (float)yA);
+                        }
+                    }
 
                     Triangle triangle = new Triangle(pointA, pointA, pointA);
 
