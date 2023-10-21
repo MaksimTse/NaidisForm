@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,42 +24,58 @@ namespace NaidisForm
         private ListBox lstTriangleInfo;
         private Button btnSaveToFile;
 
-        private Bitmap triangleImage;
-
         public TriangleForm2()
         {
             InitializeComponent();
             InitializeUI();
+
+            this.BackColor = Color.Pink;
+
+            // btnSize
+            btnSaveToFile.Size = new Size(100, 30);
+            btnClear.Size = new Size(100, 30);
+            btnDrawTriangle.Size = new Size(100, 30);
+
+            // btnPlace
+            btnSaveToFile.Location = new Point(230, 220);
+            btnClear.Location = new Point(120, 220);
+            btnDrawTriangle.Location = new Point(10, 220);
+
+            // btnBG
+            btnSaveToFile.BackColor = Color.Pink;
+            btnClear.BackColor = Color.Pink;
+            btnDrawTriangle.BackColor = Color.Pink;
+
+            // btnFG
+            btnSaveToFile.ForeColor = Color.White;
+            btnClear.ForeColor = Color.White;
+            btnDrawTriangle.ForeColor = Color.White;
+
+            // txtBG
+            txtPointA.BackColor = Color.LightPink;
+            txtPointB.BackColor = Color.LightPink;
+            txtPointC.BackColor = Color.LightPink;
+            txtHeight.BackColor = Color.LightPink;
+
+            // txtFG
+            txtPointA.ForeColor = Color.Black;
+            txtPointB.ForeColor = Color.Black;
+            txtPointC.ForeColor = Color.Black;
+            txtHeight.ForeColor = Color.Black;
+
+            // ListBoxBG
+            lstTriangleInfo.BackColor = Color.Pink;
+
+            // ListBoxFG
+            lstTriangleInfo.ForeColor = Color.Black;
         }
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            triangleImage = null;
             Invalidate();
             lstTriangleInfo.Items.Clear();
         }
 
-
-        private void btnSaveAsImage_Click(object sender, EventArgs e)
-        {
-            if (triangleImage != null)
-            {
-                using (SaveFileDialog dialog = new SaveFileDialog())
-                {
-                    dialog.Filter = "PNG Image|*.png";
-                    dialog.Title = "Save Triangle Image";
-                    if (dialog.ShowDialog() == DialogResult.OK)
-                    {
-                        triangleImage.Save(dialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                        MessageBox.Show("lisatud.");
-                    }
-                }
-            }
-            else
-            {
-                MessageBox.Show("error.");
-            }
-        }
         private void InitializeUI()
         {
 
@@ -105,7 +122,7 @@ namespace NaidisForm
             btnDrawTriangle.Click += btnDrawTriangle_Click;
 
             btnClear = new Button();
-            btnClear.Text = "Clear";
+            btnClear.Text = "Selge";
             btnClear.Location = new Point(10, 250);
             btnClear.Click += btnClear_Click;
 
@@ -128,11 +145,21 @@ namespace NaidisForm
         {
             using (StreamWriter writer = new StreamWriter("triangle_data.txt", true))
             {
-                writer.WriteLine("Kolmunrga küljed:");
+                writer.WriteLine("Kolmnurga küljed:");
                 writer.WriteLine($"Külg A: {txtPointA.Text}");
                 writer.WriteLine($"Külg B: {txtPointB.Text}");
                 writer.WriteLine($"Külg C: {txtPointC.Text}");
-                writer.WriteLine($"Kõrgus: {txtHeight.Text}");
+
+
+                Triangle triangle = new Triangle(double.Parse(txtPointA.Text), double.Parse(txtPointB.Text), double.Parse(txtPointC.Text));
+                double surface = triangle.Surface();
+                double height = triangle.Height();
+                double perimeter = triangle.Perimeter();
+
+                writer.WriteLine($"Kõrgus: {height}");
+                writer.WriteLine($"Pindala: {surface}");
+                writer.WriteLine($"Perimeeter:  {perimeter}");
+
                 writer.WriteLine("Kolmnurga tüüp: " + DetermineTriangleType(double.Parse(txtPointA.Text), double.Parse(txtPointB.Text), double.Parse(txtPointC.Text)));
                 writer.WriteLine();
             }
@@ -153,9 +180,7 @@ namespace NaidisForm
 
                         double centerX = 500;
                         double centerY = 250;
-                        double angleA = 0;
                         double angleB = Math.Acos((pointA * pointA + pointC * pointC - pointB * pointB) / (2 * pointA * pointC));
-                        double angleC = Math.Acos((pointA * pointA + pointB * pointB - pointC * pointC) / (2 * pointA * pointB));
 
                         double xA = centerX;
                         double yA = centerY;

@@ -23,6 +23,7 @@ namespace NaidisForm
         private Button btnClear;
         private ListBox lstTriangleInfo;
         private TriangleForm2 triangleForm2;
+        
 
         public TriangleForm()
 
